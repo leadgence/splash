@@ -33,7 +33,7 @@ def parse_opts(jupyter=False, argv=None):
         help="path to a folder with proxy profiles")
     op.add_option("--js-profiles-path",
         help="path to a folder with javascript profiles")
-    op.add_option("--maxrss-check-interval", help="set custom interval for checking rss (in seconds) (default: %default)", default=60)
+    op.add_option("--maxrss-check-interval", type=int,help="set custom interval for checking rss (in seconds) (default: %default)", default=60)
     op.add_option("--no-js-cross-domain-access",
         action="store_false",
         dest="js_cross_domain_enabled",
@@ -418,6 +418,7 @@ def main(jupyter=False, argv=None, server_factory=splash_server):
             js_profiles_path=opts.js_profiles_path,
             js_disable_cross_domain_access=not opts.js_cross_domain_enabled,
             filters_path=opts.filters_path,
+            
             allowed_schemes=opts.allowed_schemes,
             private_mode=not opts.disable_private_mode,
             ui_enabled=not opts.disable_ui,
