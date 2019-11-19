@@ -29,6 +29,9 @@ def parse_opts(jupyter=False, argv=None):
     op.add_option("-f", "--logfile", help="log file")
     op.add_option("-m", "--maxrss", type=float, default=0,
         help="exit if max RSS reaches this value (in MB or ratio of physical mem) (default: %default)")
+    op.add_option("--maxrss-check-interval", type=int,
+        help="set custom interval for checking rss (in seconds) (default: %default)",
+        default=60)
     op.add_option("--proxy-profiles-path",
         help="path to a folder with proxy profiles")
     op.add_option("--js-profiles-path",
@@ -252,7 +255,7 @@ def splash_server(portnum, ip, slots, network_manager_factory, max_timeout,
     log.msg("Server listening on http://%s:%s" % (ip, portnum))
 
 
-def monitor_maxrss(maxrss):
+def monitor_maxrss(maxrss, maxrss_check_interval):
     from twisted.internet import reactor, task
     from twisted.python import log
     from splash.utils import get_ru_maxrss, get_total_phymem
@@ -277,7 +280,7 @@ def monitor_maxrss(maxrss):
     if maxrss:
         log.msg("maxrss limit: %d MB" % maxrss)
         t = task.LoopingCall(check_maxrss)
-        t.start(60, now=False)
+        t.start(maxrss_check_interval, now=False)
 
 
 def default_splash_server(portnum, ip, max_timeout, *, slots=None,
@@ -405,7 +408,7 @@ def main(jupyter=False, argv=None, server_factory=splash_server):
         install_qtreactor(opts.verbosity >= 5)
         log_splash_version()
         bump_nofile_limit()
-        monitor_maxrss(opts.maxrss)
+        monitor_maxrss(opts.maxrss, opts.maxrss_check_interval)
 
         ipnum = opts.ip if hasattr(opts, 'ip') else '0.0.0.0'
 
