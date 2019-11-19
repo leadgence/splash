@@ -21,7 +21,7 @@ while true; do
     --lua-package-path /etc/splash/lua_modules/?.lua \
     "$@" &
 
-    splash_pid=$!
+  splash_pid=$!
 
   wait ${splash_pid}
   echo "Attempting to kill Xvfb instances if exist..."

@@ -29,11 +29,13 @@ def parse_opts(jupyter=False, argv=None):
     op.add_option("-f", "--logfile", help="log file")
     op.add_option("-m", "--maxrss", type=float, default=0,
         help="exit if max RSS reaches this value (in MB or ratio of physical mem) (default: %default)")
+    op.add_option("--maxrss-check-interval", type=int,
+        help="set custom interval for checking rss (in seconds) (default: %default)",
+        default=60)
     op.add_option("--proxy-profiles-path",
         help="path to a folder with proxy profiles")
     op.add_option("--js-profiles-path",
         help="path to a folder with javascript profiles")
-    op.add_option("--maxrss-check-interval", type=int,help="set custom interval for checking rss (in seconds) (default: %default)", default=60)
     op.add_option("--no-js-cross-domain-access",
         action="store_false",
         dest="js_cross_domain_enabled",
