@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 # Exit cleanly on termination
 trap 'splash_clean_exit' TERM
 
 splash_clean_exit() {
-  kill ${splash_pid}
+  kill -9 ${splash_pid}
   echo "Splash killed, exiting with 0 to prevent container from failing"
   exit 0
 }
@@ -13,7 +13,7 @@ splash_pid=""
 while true; do
   echo "Starting Splash..."
 
-  python3 \
+  timeout --signal=SIGKILL 180 python3 \
     /app/bin/splash \
     --proxy-profiles-path /etc/splash/proxy-profiles \
     --js-profiles-path /etc/splash/js-profiles \
