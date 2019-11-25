@@ -1,5 +1,5 @@
 #!/bin/bash
-
+SPLASH_RESTART_SECONDS="${SPLASH_RESTART_SECONDS:-180}"
 # Exit cleanly on termination
 trap 'splash_clean_exit' TERM
 
@@ -13,7 +13,7 @@ splash_pid=""
 while true; do
   echo "Starting Splash..."
 
-  timeout --signal=SIGKILL 180 python3 \
+  timeout --signal=SIGKILL ${SPLASH_RESTART_SECONDS} python3 \
     /app/bin/splash \
     --proxy-profiles-path /etc/splash/proxy-profiles \
     --js-profiles-path /etc/splash/js-profiles \
