@@ -13,7 +13,7 @@ splash_pid=""
 while true; do
   echo "Starting Splash..."
 
-  timeout --signal=SIGKILL ${SPLASH_RESTART_SECONDS} python3 \
+  python3 \
     /app/bin/splash \
     --proxy-profiles-path /etc/splash/proxy-profiles \
     --js-profiles-path /etc/splash/js-profiles \
@@ -22,7 +22,14 @@ while true; do
     "$@" &
 
   splash_pid=$!
-
+  sleep 2
+  while true; do
+    result=$(curl --max-time 5 -I http://localhost:8050 2>/dev/null)
+    if [ -z "$result" ]; then
+      pkill -9 python3
+      break
+    fi
+  done
   wait ${splash_pid}
   echo "Attempting to kill Xvfb instances if exist..."
   pkill -9 -e Xvfb 
