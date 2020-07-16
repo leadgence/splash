@@ -24,8 +24,9 @@ while true; do
   splash_pid=$!
   sleep 2
   while true; do
-    result=$(curl --max-time 5 -I http://localhost:8050 2>/dev/null)
-    if [ -z "$result" ]; then
+    curl --max-time 5 -I http://localhost:8050 &>/dev/null
+    ret=$?
+    if [ $ret -ne 0 ]; then
       pkill -9 python3
       break
     fi
