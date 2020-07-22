@@ -19,7 +19,9 @@ while true; do
     --js-profiles-path /etc/splash/js-profiles \
     --filters-path /etc/splash/filters \
     --lua-package-path /etc/splash/lua_modules/?.lua \
-    "$@" &
+    "$@" &>/dev/null &
+
+  echo "[ERROR] splash started"
 
   splash_pid=$!
   sleep 2
@@ -27,6 +29,7 @@ while true; do
     curl --max-time 5 -I http://localhost:8050 &>/dev/null
     ret=$?
     if [ $ret -ne 0 ]; then
+      echo "[ERROR] kill splash"
       pkill -9 python3
       break
     fi
